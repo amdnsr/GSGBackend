@@ -1,0 +1,36 @@
+{
+    "db_details": {
+        "bus_journey_details": {
+            "alias": "bus_journey_details",
+            "collection_name": "bus_journey_details"
+        },
+        "bus_details": {
+            "alias": "bus_details",
+            "collection_name": "bus_details"
+        },
+        "agency_details": {
+            "alias": "agency_details",
+            "collection_name": "agency_details"
+        },
+        "agency_user_details": {
+            "alias": "agency_user_details",
+            "collection_name": "agency_user_details"
+        },
+        "journey_seat_details": {
+            "alias": "journey_seat_details",
+            "collection_name": "journey_seat_details"
+        },
+        "user_info_details": {
+            "alias": "user_info_details",
+            "collection_name": "user_info_details"
+        },
+        "user_ticket_details": {
+            "alias": "user_ticket_details",
+            "collection_name": "user_ticket_details"
+        },
+        "ticket_payment_details": {
+            "alias": "ticket_payment_details",
+            "collection_name": "ticket_payment_details"
+        }
+    }
+}
