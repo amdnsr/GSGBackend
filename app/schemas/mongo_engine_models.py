@@ -68,6 +68,8 @@ class UserInfoDetailsModel(Document):
     email = StringField(required=True)
     phone_number = StringField(required=True)
     hashed_password = StringField(required=True)
+    is_active = BooleanField(default=False)
+    account_type = StringField(default="user")
     meta = {'db_alias': db_configurations.user_info_details['alias'],
             'collection': db_configurations.user_info_details['collection_name']}
 
