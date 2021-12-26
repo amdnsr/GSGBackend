@@ -1,4 +1,12 @@
 {
+    "app_details": {
+        "title": "GetSeatGo",
+        "version": "0.0.1",
+        "description": "Backend for GetSeatGo App",
+        "host": "localhost",
+        "port": 8000,
+        "reload": true
+    },
     "db_details": {
         "bus_journey_details": {
             "alias": "bus_journey_details",
