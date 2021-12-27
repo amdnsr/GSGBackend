@@ -41,7 +41,8 @@ class AppConfig(metaclass=SingleInstanceMetaClass):
     host: str
     port: int
     reload: bool
-    
+    debug: str
+
     def load_configurations(self, config_path='config.json'):
         config_json_path = os.path.join(DBConfig.current_dir, config_path)
         config_json = json.loads(open(config_json_path, 'r').read())
@@ -52,6 +53,7 @@ class AppConfig(metaclass=SingleInstanceMetaClass):
         AppConfig.host = config_json["app_details"]["host"]
         AppConfig.port = config_json["app_details"]["port"]
         AppConfig.reload = config_json["app_details"]["reload"]
+        AppConfig.debug = config_json["app_details"]["debug"]
 
 
 config_path = 'config.json'
