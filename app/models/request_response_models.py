@@ -1,4 +1,6 @@
-from typing import List
+from datetime import datetime
+
+from typing import List, Optional
 from pydantic import BaseModel
 
 
@@ -32,3 +34,41 @@ class CreateAccountRequest(BaseModel):
     phone_number: str
     password: str
     confirm_password: str
+
+
+class CreateAccountResponse(BaseModel):
+    pass
+
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+
+class Token(BaseModel):
+    token_type: str
+    access_token: str
+    expire_at: datetime
+    refresh_token: str
+    refresh_expire_at: datetime
+
+
+class TokenPayload(BaseModel):
+    exp: datetime
+    sub: Optional[str] = None
+    refresh: Optional[bool] = None
+
+
+class TokenRefresh(BaseModel):
+    refresh_token: str
+
+
+class LoginResponse(Token):
+    pass
+
+
+class UserProfileResponse(BaseModel):
+    first_name: str
+    last_name: str
+    email: str
+    phone_number: str
