@@ -1,0 +1,6 @@
+*.pyc
+.vscode/
+app/extras/
+scripts/
+static/
+templates/
