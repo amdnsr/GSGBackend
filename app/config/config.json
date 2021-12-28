@@ -1,12 +1,12 @@
 {
     "app_details": {
-        "title": "GetSeatGo",
-        "version": "0.0.1",
-        "description": "Backend for GetSeatGo App",
-        "host": "localhost",
-        "port": 8000,
-        "reload": true,
-        "debug": true
+        "TITLE": "GetSeatGo",
+        "VERSION": "0.0.1",
+        "DESCRIPTION": "Backend for GetSeatGo App",
+        "HOST": "0.0.0.0",
+        "PORT": 8080,
+        "RELOAD": true,
+        "DEBUG": true
     },
     "db_details": {
         "bus_journey_details": {
