@@ -1,0 +1,8 @@
+{
+    "ALGORITHM": null,
+    "SECRET_KEY": null,
+    "ENVIRONMENT": null,
+    "ACCESS_TOKEN_EXPIRE_MINUTES": null,
+    "REFRESH_TOKEN_EXPIRE_MINUTES": null,
+    "BACKEND_CORS_ORIGINS": null
+}

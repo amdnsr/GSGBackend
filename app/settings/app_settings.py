@@ -33,8 +33,8 @@ class Settings(metaclass=SingleInstanceMetaClass):
         Settings.ALGORITHM = get_env_variable("ALGORITHM", settings_json, str)
         Settings.SECRET_KEY = get_env_variable("SECRET_KEY", settings_json, str)
         Settings.ENVIRONMENT = get_env_variable("ENVIRONMENT", settings_json, str)
-        Settings.ACCESS_TOKEN_EXPIRE_MINUTES = get_env_variable("ACCESS_TOKEN_EXPIRE_MINUTES", settings_json, str)
-        Settings.REFRESH_TOKEN_EXPIRE_MINUTES = get_env_variable("REFRESH_TOKEN_EXPIRE_MINUTES", settings_json, str)
+        Settings.ACCESS_TOKEN_EXPIRE_MINUTES = get_env_variable("ACCESS_TOKEN_EXPIRE_MINUTES", settings_json, int)
+        Settings.REFRESH_TOKEN_EXPIRE_MINUTES = get_env_variable("REFRESH_TOKEN_EXPIRE_MINUTES", settings_json, int)
         Settings.BACKEND_CORS_ORIGINS = get_env_variable("BACKEND_CORS_ORIGINS", settings_json, str)
     
     @classmethod
