@@ -1,5 +1,8 @@
 import json
 import os
+from jinja2.environment import Environment
+from jinja2.loaders import FileSystemLoader
+from jinja2.utils import select_autoescape
 from pydantic import AnyHttpUrl, AnyUrl, validator
 from typing import Any, Dict, List, Literal, Optional, Set, Union
 #
@@ -80,14 +83,16 @@ class EmailSettings(Config_Settings_Base, metaclass=SingleInstanceMetaClass):
     SMTP_PASSWORD: Optional[str] = None
     EMAILS_FROM_EMAIL: Optional[str] = None
     EMAILS_FROM_NAME: Optional[str] = None
+    EMAIL_CREATE_ACCOUNT_TOKEN_EXPIRE_HOURS: int = 48
     EMAIL_RESET_TOKEN_EXPIRE_HOURS: int = 48
-    EMAIL_TEMPLATES_DIR: str = "app/templates/"
+    EMAIL_TEMPLATES_DIR: str = "templates"
     EMAILS_ENABLED: bool = False
 
     EMAIL_TEST_USER: str = "test@example.com"  # type: ignore
     FIRST_SUPERUSER: str = None
     FIRST_SUPERUSER_PASSWORD: str = None
     USERS_OPEN_REGISTRATION: bool = False
+    JINJA_ENVIRONMENT: Environment = None
 
     def load(self, email_settings_path=None):
         if email_settings_path:
@@ -112,6 +117,8 @@ class EmailSettings(Config_Settings_Base, metaclass=SingleInstanceMetaClass):
             "EMAILS_FROM_EMAIL", email_settings_json, str, EmailSettings.EMAILS_FROM_EMAIL)
         EmailSettings.EMAILS_FROM_NAME = get_env_variable(
             "EMAILS_FROM_NAME", email_settings_json, str, EmailSettings.EMAILS_FROM_NAME)
+        EmailSettings.EMAIL_CREATE_ACCOUNT_TOKEN_EXPIRE_HOURS = get_env_variable(
+            "EMAIL_CREATE_ACCOUNT_TOKEN_EXPIRE_HOURS", email_settings_json, int, EmailSettings.EMAIL_CREATE_ACCOUNT_TOKEN_EXPIRE_HOURS)
         EmailSettings.EMAIL_RESET_TOKEN_EXPIRE_HOURS = get_env_variable(
             "EMAIL_RESET_TOKEN_EXPIRE_HOURS", email_settings_json, int, EmailSettings.EMAIL_RESET_TOKEN_EXPIRE_HOURS)
         EmailSettings.EMAIL_TEMPLATES_DIR = get_env_variable(
@@ -126,6 +133,8 @@ class EmailSettings(Config_Settings_Base, metaclass=SingleInstanceMetaClass):
             "FIRST_SUPERUSER_PASSWORD", email_settings_json, str, EmailSettings.FIRST_SUPERUSER_PASSWORD)
         EmailSettings.USERS_OPEN_REGISTRATION = get_env_variable(
             "USERS_OPEN_REGISTRATION", email_settings_json, bool, EmailSettings.USERS_OPEN_REGISTRATION)
+        EmailSettings.JINJA_ENVIRONMENT = Environment(loader=FileSystemLoader(os.path.join(EmailSettings.app_root_dir,
+            EmailSettings.EMAIL_TEMPLATES_DIR)), autoescape=select_autoescape('xml', 'html'))
 
     @validator("EMAILS_ENABLED", pre=True)
     def get_emails_enabled(cls, v: bool, values: Dict[str, Any]) -> bool:

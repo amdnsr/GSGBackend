@@ -5,6 +5,7 @@
         "DESCRIPTION": "Backend for GetSeatGo App",
         "HOST": "0.0.0.0",
         "PORT": 8080,
+        "PUBLIC_URL": "0.0.0.0",
         "RELOAD": true,
         "DEBUG": true
     },

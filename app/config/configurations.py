@@ -44,7 +44,9 @@ class AppConfig(Config_Settings_Base, metaclass=SingleInstanceMetaClass):
     PORT: int = None
     RELOAD: bool = None
     DEBUG: bool = None
-
+    PUBLIC_URL: str = None
+    SERVER_HOST: str = None
+    
     def load(self, config_path='config.json'):
         config_json_path = os.path.join(DBConfig.current_dir, config_path)
         config_json = json.loads(open(config_json_path, 'r').read())
@@ -58,6 +60,12 @@ class AppConfig(Config_Settings_Base, metaclass=SingleInstanceMetaClass):
         AppConfig.PORT = get_env_variable("PORT", json_dict, int)
         AppConfig.RELOAD = get_env_variable("RELOAD", json_dict, bool)
         AppConfig.DEBUG = get_env_variable("DEBUG", json_dict, bool)
+        # use reverse of urllib.parse.urlsplit, i.e. urlunsplit
+        # SplitResult(scheme='http', netloc='www.example.com', path='/index', query='', fragment='')
+        # it needs a 5 tuple of the above values
+        # urlunsplit(('http', 'localhost:5000', '', "",  ""))
+        AppConfig.PUBLIC_URL = get_env_variable("PUBLIC_URL", json_dict, str)
+        AppConfig.SERVER_HOST = ":".join([str(AppConfig.HOST), str(AppConfig.PORT)])
 
 
 config_path = 'config.json'
