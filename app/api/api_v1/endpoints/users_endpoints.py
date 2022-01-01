@@ -2,17 +2,31 @@
 from logging import error
 from fastapi import Depends, HTTPException, status
 from fastapi_utils.inferring_router import InferringRouter
+from typing import Union
 from app.models.request_response_models import CreateAccountRequest, CreateAccountResponse, LoginRequest, LoginResponse, UserProfileResponse
 from app.core import security
+from app.utils.email_utils import generate_new_account_token, send_new_account_email, verify_new_account_token
 
 
 router = InferringRouter(tags=["users"])
 
 
-@router.post("/register", response_model=CreateAccountResponse)
+@router.post("/register", response_model=Union[str, CreateAccountResponse])
 def register(user_details: CreateAccountRequest):
     user_dict = user_details.dict()
-    print(user_dict)
+    email = user_details.email
+    token = generate_new_account_token(email)
+    send_new_account_email(email, email, token)
+    return "Check your mail for confirmation of account"
+
+
+@router.get("/confirm-account-creation")
+def confirm_account(token: str):
+    # print(token)
+    if verify_new_account_token(token):
+        return "Congratulations, you successfully activated your account!"
+    else:
+        return status.HTTP_401_UNAUTHORIZED
 
 
 @router.post("/login", response_model=LoginResponse)
