@@ -3,10 +3,13 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.api_v1.endpoints import common_endpoints, users_endpoints
-from app.config.configurations import AppConfig
-from app.settings.app_settings import Settings
+from app.config.configurations import AppConfig, DBConfig
+from app.settings.app_settings import EmailSettings, Settings
 
-# print(Settings.print())
+email_settings_text = EmailSettings.print()
+settings_text = Settings.print()
+app_config_text = AppConfig.print()
+db_config_text = DBConfig.print()
 # print(AppConfig.print())
 TITLE = AppConfig.TITLE
 VERSION = AppConfig.VERSION
@@ -40,4 +43,8 @@ app.include_router(common_endpoints.router, prefix="")
 
 
 if __name__ == "__main__":
+    # print(email_settings_text)
+    # print(settings_text)
+    # print(app_config_text)
+    # print(db_config_text)
     uvicorn.run("main:app", host=HOST, port=PORT, reload=RELOAD, debug=DEBUG)
