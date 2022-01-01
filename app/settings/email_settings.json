@@ -1,0 +1,16 @@
+{
+    "SMTP_TLS": true,
+    "SMTP_PORT": null,
+    "SMTP_HOST": null,
+    "SMTP_USER": null,
+    "SMTP_PASSWORD": null,
+    "EMAILS_FROM_EMAIL": null,
+    "EMAILS_FROM_NAME": null,
+    "EMAIL_RESET_TOKEN_EXPIRE_HOURS": null,
+    "EMAIL_TEMPLATES_DIR": null,
+    "EMAILS_ENABLED": null,
+    "EMAIL_TEST_USER": null,
+    "FIRST_SUPERUSER": null,
+    "FIRST_SUPERUSER_PASSWORD": null,
+    "USERS_OPEN_REGISTRATION": null
+}
