@@ -1,10 +1,11 @@
 import json
 import os
 from typing import List
+from app.settings.app_settings import Config_Settings_Base
 from app.utils.helpers import SingleInstanceMetaClass, get_env_variable
 
 
-class DBConfig(metaclass=SingleInstanceMetaClass):
+class DBConfig(Config_Settings_Base, metaclass=SingleInstanceMetaClass):
     app_root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     current_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -17,10 +18,10 @@ class DBConfig(metaclass=SingleInstanceMetaClass):
     user_ticket_details: dict = None
     ticket_payment_details: dict = None
 
-    def load_configurations(self, config_path='config.json'):
+    def load(self, config_path='config.json'):
         config_json_path = os.path.join(DBConfig.current_dir, config_path)
         config_json = json.loads(open(config_json_path, 'r').read())
-        
+
         DBConfig.bus_journey_details = config_json["db_details"]["bus_journey_details"]
         DBConfig.bus_details = config_json["db_details"]["bus_details"]
         DBConfig.agency_details = config_json["db_details"]["agency_details"]
@@ -31,24 +32,25 @@ class DBConfig(metaclass=SingleInstanceMetaClass):
         DBConfig.ticket_payment_details = config_json["db_details"]["ticket_payment_details"]
 
 
-class AppConfig(metaclass=SingleInstanceMetaClass):
-    app_root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    current_dir = os.path.dirname(os.path.abspath(__file__))
+class AppConfig(Config_Settings_Base, metaclass=SingleInstanceMetaClass):
+    app_root_dir: str = os.path.dirname(
+        os.path.dirname(os.path.abspath(__file__)))
+    current_dir: str = os.path.dirname(os.path.abspath(__file__))
 
-    TITLE: str
-    VERSION: str
-    DESCRIPTION: str
-    HOST: str
-    PORT: int
-    RELOAD: bool
-    DEBUG: str
+    TITLE: str = None
+    VERSION: str = None
+    DESCRIPTION: str = None
+    HOST: str = None
+    PORT: int = None
+    RELOAD: bool = None
+    DEBUG: bool = None
 
-    def load_configurations(self, config_path='config.json'):
+    def load(self, config_path='config.json'):
         config_json_path = os.path.join(DBConfig.current_dir, config_path)
         config_json = json.loads(open(config_json_path, 'r').read())
-        
+
         json_dict = config_json["app_details"]
-        
+
         AppConfig.TITLE = get_env_variable("TITLE", json_dict, str)
         AppConfig.VERSION = get_env_variable("VERSION", json_dict, str)
         AppConfig.DESCRIPTION = get_env_variable("DESCRIPTION", json_dict, str)
@@ -57,24 +59,7 @@ class AppConfig(metaclass=SingleInstanceMetaClass):
         AppConfig.RELOAD = get_env_variable("RELOAD", json_dict, bool)
         AppConfig.DEBUG = get_env_variable("DEBUG", json_dict, bool)
 
-    @classmethod
-    def print(self):
-        app_config = \
-        f"""
-        AppConfig
-        {"-"*50}
-        TITLE: {AppConfig.TITLE}
-        VERSION: {AppConfig.VERSION}
-        DESCRIPTION: {AppConfig.DESCRIPTION}
-        HOST: {AppConfig.HOST}
-        PORT: {AppConfig.PORT}
-        RELOAD: {AppConfig.RELOAD}
-        DEBUG: {AppConfig.DEBUG}
-        {"-"*50}
-        """
-        return app_config
-
 
 config_path = 'config.json'
-DBConfig().load_configurations(config_path)
-AppConfig().load_configurations(config_path)
+DBConfig().load(config_path)
+AppConfig().load(config_path)
