@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 
 
 class SingleInstanceMetaClass(type):
@@ -60,3 +61,9 @@ def pretty_text(class_name, key_value_dict, boundary, boundary_length, separator
     text.append(boundary * boundary_length)
     text = f"{separator}".join(text)
     return text
+
+
+def prompt(prompt):
+    sys.stdout.write(prompt + ": ")
+    sys.stdout.flush()
+    return sys.stdin.readline().strip()
