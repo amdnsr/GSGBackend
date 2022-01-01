@@ -91,7 +91,7 @@ def send_email(to_email: str, subject: str = "", body: str = "", is_text: bool =
         server.login(smtp_options["smtp_user"], password)
     except Exception as e:
         # log the error with traceback
-        print(e.with_traceback())
+        print(e)
         pass
 
     # sending the mail
