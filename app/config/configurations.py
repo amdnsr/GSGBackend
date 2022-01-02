@@ -1,6 +1,6 @@
 import json
 import os
-from typing import List
+from typing import List, Literal
 from app.settings.app_settings import Config_Settings_Base
 from app.utils.helpers import SingleInstanceMetaClass, get_env_variable
 
@@ -15,8 +15,15 @@ class DBConfig(Config_Settings_Base, metaclass=SingleInstanceMetaClass):
     agency_user_details: dict = None
     journey_seat_details: dict = None
     user_info_details: dict = None
+    UserDetailsModel: dict = None
     user_ticket_details: dict = None
     ticket_payment_details: dict = None
+    MONGO_HOST: str = None
+    MONGO_PORT: int = None
+    MONGO_URI: str = None
+    MONGO_ENV: Literal["DEV", "PYTEST", "STAGE", "PRODUCTION"] = None
+    MONGO_USERNAME: str = None
+    MONGO_PASSWORD: str = None
 
     def load(self, config_path='config.json'):
         config_json_path = os.path.join(DBConfig.current_dir, config_path)
@@ -28,8 +35,15 @@ class DBConfig(Config_Settings_Base, metaclass=SingleInstanceMetaClass):
         DBConfig.agency_user_details = config_json["db_details"]["agency_user_details"]
         DBConfig.journey_seat_details = config_json["db_details"]["journey_seat_details"]
         DBConfig.user_info_details = config_json["db_details"]["user_info_details"]
+        DBConfig.UserDetailsModel = config_json["db_details"]["UserDetailsModel"]
         DBConfig.user_ticket_details = config_json["db_details"]["user_ticket_details"]
         DBConfig.ticket_payment_details = config_json["db_details"]["ticket_payment_details"]
+        DBConfig.MONGO_HOST = get_env_variable("MONGO_HOST", config_json, str)
+        DBConfig.MONGO_PORT = get_env_variable("MONGO_PORT", config_json, int)
+        DBConfig.MONGO_URI = get_env_variable("MONGO_URI", config_json, str)
+        DBConfig.MONGO_ENV = get_env_variable("MONGO_ENV", config_json, str)
+        DBConfig.MONGO_USERNAME = get_env_variable("MONGO_USERNAME", config_json, str)
+        DBConfig.MONGO_PASSWORD = get_env_variable("MONGO_PASSWORD", config_json, str)
 
 
 class AppConfig(Config_Settings_Base, metaclass=SingleInstanceMetaClass):
