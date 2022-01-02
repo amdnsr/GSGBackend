@@ -1,16 +1,18 @@
 from typing import Set
-import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 from app.api.api_v1.endpoints import common_endpoints, users_endpoints
 from app.config.configurations import AppConfig, DBConfig
 from app.settings.app_settings import EmailSettings, Settings
 
+# FastAPI JWT Auth CSRF Token
+# https://indominusbyte.github.io/fastapi-jwt-auth/configuration/csrf/
 email_settings_text = EmailSettings.print()
 settings_text = Settings.print()
 app_config_text = AppConfig.print()
 db_config_text = DBConfig.print()
-# print(AppConfig.print())
+
 TITLE = AppConfig.TITLE
 VERSION = AppConfig.VERSION
 DESCRIPTION = AppConfig.DESCRIPTION
