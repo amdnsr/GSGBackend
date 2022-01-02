@@ -6,18 +6,19 @@ from typing import Union
 from app.models.request_response_models import CreateAccountRequest, CreateAccountResponse, LoginRequest, LoginResponse, UserProfileResponse
 from app.core import security
 from app.utils.email_utils import generate_new_account_token, send_new_account_email, verify_new_account_token
-
+from app.db.mongo_insertion_handlers import user_details_insertion_handler
 
 router = InferringRouter(tags=["users"])
 
 
 @router.post("/register", response_model=Union[str, CreateAccountResponse])
-def register(user_details: CreateAccountRequest):
-    user_dict = user_details.dict()
-    email = user_details.email
+def register(user: CreateAccountRequest):
+    email = user.email
+    first_name = user.first_name
+    db_obj = user_details_insertion_handler.insert(user)
     token = generate_new_account_token(email)
-    send_new_account_email(email, email, token)
-    return "Check your mail for confirmation of account"
+    send_new_account_email(email, first_name, token)
+    return f"Check your mail for confirmation of account. Your temporary id is {db_obj.id}"
 
 
 @router.get("/confirm-account-creation")
