@@ -38,12 +38,12 @@ class DBConfig(Config_Settings_Base, metaclass=SingleInstanceMetaClass):
         DBConfig.UserDetailsModel = config_json["db_details"]["UserDetailsModel"]
         DBConfig.user_ticket_details = config_json["db_details"]["user_ticket_details"]
         DBConfig.ticket_payment_details = config_json["db_details"]["ticket_payment_details"]
-        DBConfig.MONGO_HOST = get_env_variable("MONGO_HOST", config_json, str)
-        DBConfig.MONGO_PORT = get_env_variable("MONGO_PORT", config_json, int)
-        DBConfig.MONGO_URI = get_env_variable("MONGO_URI", config_json, str)
-        DBConfig.MONGO_ENV = get_env_variable("MONGO_ENV", config_json, str)
-        DBConfig.MONGO_USERNAME = get_env_variable("MONGO_USERNAME", config_json, str)
-        DBConfig.MONGO_PASSWORD = get_env_variable("MONGO_PASSWORD", config_json, str)
+        DBConfig.MONGO_HOST = get_env_variable("MONGO_HOST", config_json["mongo_details"], str)
+        DBConfig.MONGO_PORT = get_env_variable("MONGO_PORT", config_json["mongo_details"], int)
+        DBConfig.MONGO_URI = get_env_variable("MONGO_URI", config_json["mongo_details"], str)
+        DBConfig.MONGO_ENV = get_env_variable("MONGO_ENV", config_json["mongo_details"], str)
+        DBConfig.MONGO_USERNAME = get_env_variable("MONGO_USERNAME", config_json["mongo_details"], str)
+        DBConfig.MONGO_PASSWORD = get_env_variable("MONGO_PASSWORD", config_json["mongo_details"], str)
 
 
 class AppConfig(Config_Settings_Base, metaclass=SingleInstanceMetaClass):

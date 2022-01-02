@@ -7,7 +7,7 @@ class MongoHandlerBase:
 
     def make_connection(self):
         if self.mongo_connection_info.get('mongo_env') in ["STAGE", "PRODUCTION"]:
-            connect(
+            self.connection = connect(
                 alias=self.mongo_connection_info.get('alias'),
                 db=self.mongo_connection_info.get('db_name'),
                 host=self.mongo_connection_info.get('host_name'),
