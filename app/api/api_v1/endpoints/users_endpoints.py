@@ -85,6 +85,8 @@ def login(login_request: LoginRequest):
 @router.get("/profile/me", response_model=Union[UserProfileResponse, str])
 def get_profile(email: str = Depends(security.auth_wrapper)):
     user = user_details_retrieval_handler.get_user_details_by_email(email)
+    if not user:
+        return "Sorry your account does not exist!"
     return user
 
 
