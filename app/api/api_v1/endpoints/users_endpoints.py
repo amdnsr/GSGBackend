@@ -12,22 +12,22 @@ from app.db.mongo_retrieval_handlers import user_details_retrieval_handler
 router = InferringRouter(tags=["users"])
 
 
-@router.post("/register", response_model=Union[str, CreateAccountResponse])
+@router.post("/register", response_model=Union[CreateAccountResponse, str])
 def register(user: CreateAccountRequest):
     email = user.email
     print(email)
-    
+
     # TODO
     # currently, mongo atlas is very slow, so checking for existing user takes a lot of time. Maybe it is because we are making a connection to db everytime?
     # instead maybe we should declare some global connections during the start of the program, and use their alias later?
 
     # Commenting it out for testing purpose
     # TODO remove the comments
-    # existing_user = user_details_retrieval_handler.get_user_details_by_email(
-    #     email)
-    # print("existing_user = ", existing_user)
-    # if existing_user:
-    #     return "Sorry, an account already exists with this email!"
+    existing_user = user_details_retrieval_handler.get_user_details_by_email(
+        email)
+    print("existing_user = ", existing_user)
+    if existing_user:
+        return "Sorry, an account already exists with this email!"
     first_name = user.first_name
     db_obj = user_details_insertion_handler.insert(user)
     print("inserted into db")
@@ -82,7 +82,14 @@ def login(login_request: LoginRequest):
     }
 
 
-@router.get("/profile/me", response_model=UserProfileResponse)
+@router.get("/profile/me", response_model=Union[UserProfileResponse, str])
 def get_profile(email: str = Depends(security.auth_wrapper)):
     user = user_details_retrieval_handler.get_user_details_by_email(email)
     return user
+
+
+@router.delete("/profile/delete", response_model=str)
+def delete_profile(email: str = Depends(security.auth_wrapper)):
+    if user_details_insertion_handler.delete_account(email):
+        return "Successfully deleted the account!"
+    return "Deletion unsuccessful!"
