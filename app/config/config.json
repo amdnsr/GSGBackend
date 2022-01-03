@@ -30,6 +30,11 @@
             "alias": "get_seat_go_db",
             "collection_name": "journey_seat_details"
         },
+        "UserDetailsModel": {
+            "alias": "UserDetailsModel",
+            "db_name": "get_seat_go_db",
+            "collection_name": "UserDetailsModel"
+        },
         "user_info_details": {
             "alias": "get_seat_go_db",
             "collection_name": "user_info_details"
@@ -42,5 +47,13 @@
             "alias": "get_seat_go_db",
             "collection_name": "ticket_payment_details"
         }
+    },
+    "mongo_details": {
+        "MONGO_HOST": null,
+        "MONGO_PORT": null,
+        "MONGO_URI": null,
+        "MONGO_ENV": null,
+        "MONGO_USERNAME": null,
+        "MONGO_PASSWORD": null
     }
 }

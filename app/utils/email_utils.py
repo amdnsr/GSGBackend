@@ -91,7 +91,7 @@ def send_email(to_email: str, subject: str = "", body: str = "", is_text: bool =
         server.login(smtp_options["smtp_user"], password)
     except Exception as e:
         # log the error with traceback
-        print(e.with_traceback())
+        print(e)
         pass
 
     # sending the mail
@@ -181,7 +181,7 @@ def verify_new_account_token(token: str) -> Optional[str]:
             token, Settings.SECRET_KEY, algorithms=[Settings.ALGORITHM])
         return decoded_token["sub"]
     except jwt.JWTError:
-        return None
+        return jwt.JWTError
 
 
 def generate_password_reset_token(email: str) -> str:
@@ -201,4 +201,4 @@ def verify_password_reset_token(token: str) -> Optional[str]:
             token, Settings.SECRET_KEY, algorithms=[Settings.ALGORITHM])
         return decoded_token["sub"]
     except jwt.JWTError:
-        return None
+        return jwt.JWTError
