@@ -92,22 +92,28 @@ def send_email(to_email: str, subject: str = "", body: str = "", is_text: bool =
     except Exception as e:
         # log the error with traceback
         print(e)
-        pass
+        return False
 
     # sending the mail
     final_message = msg.as_string()
     # logging the email temporarily for testing
     # with open("result.html", "w") as f:
     #     f.write(str(final_message))
-
-    senderrs = server.sendmail(
-        smtp_options["from_email"], to_email, final_message)
-    if len(senderrs) != 0:
-        # log the email addresses where the mail could not be sent
-        print(senderrs)
+    result = None
+    try:
+        senderrs = server.sendmail(
+            smtp_options["from_email"], to_email, final_message)
+        result = True
+    except smtplib.SMTPRecipientsRefused as e:
+        result = False
+        print(e)
+    # if len(senderrs) != 0:
+    #     # log the email addresses where the mail could not be sent
+    #     print(senderrs)
 
     # terminating the session
     server.quit()
+    return result
 
 
 def send_test_email(to_email: str) -> None:
@@ -116,7 +122,7 @@ def send_test_email(to_email: str) -> None:
     subject = f"{project_name} - Test email"
     home_link = f"{public_url}"
     body = f"Hello World! {home_link}"
-    send_email(to_email, subject, body, is_text=True)
+    return send_email(to_email, subject, body, is_text=True)
 
 
 def send_reset_password_email(to_email: str, email: str, username: str, token: str, attachment_file_paths: List = []) -> None:
@@ -138,7 +144,7 @@ def send_reset_password_email(to_email: str, email: str, username: str, token: s
     html_template = jinja_environment.get_template("new_account_email.html")
     # assuming html_template to be a jinja template
     html = html_template.render(**environment)
-    send_email(to_email, subject, html, attachment_file_paths)
+    return send_email(to_email, subject, html, attachment_file_paths)
 
 
 def send_new_account_email(to_email: str, username: str, token: str, attachment_file_paths: List = []) -> None:
@@ -160,7 +166,7 @@ def send_new_account_email(to_email: str, username: str, token: str, attachment_
     html_template = jinja_environment.get_template("new_account_email.html")
     # assuming html_template to be a jinja template
     html = html_template.render(**environment)
-    send_email(to_email, subject, html, attachment_file_paths)
+    return send_email(to_email, subject, html, attachment_file_paths)
 
 
 def generate_new_account_token(email: str) -> str:
