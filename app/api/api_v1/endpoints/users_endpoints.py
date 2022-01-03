@@ -30,9 +30,12 @@ def register(user: CreateAccountRequest):
         return "Sorry, an account already exists with this email!"
     first_name = user.first_name
     db_obj = user_details_insertion_handler.insert(user)
-    print("inserted into db")
+    print("inserted user into db")
     token = generate_new_account_token(email)
-    send_new_account_email(email, first_name, token)
+    if not send_new_account_email(email, first_name, token):
+        user_details_insertion_handler.delete_account(email)
+        print("removed user from db")
+        return f"Unable to send email to this address, please check your email again."
     return f"Check your mail for confirmation of account. Your user id is {db_obj.id}"
 
 
