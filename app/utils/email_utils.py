@@ -181,7 +181,7 @@ def verify_new_account_token(token: str) -> Optional[str]:
             token, Settings.SECRET_KEY, algorithms=[Settings.ALGORITHM])
         return decoded_token["sub"]
     except jwt.JWTError:
-        return None
+        return jwt.JWTError
 
 
 def generate_password_reset_token(email: str) -> str:
@@ -201,4 +201,4 @@ def verify_password_reset_token(token: str) -> Optional[str]:
             token, Settings.SECRET_KEY, algorithms=[Settings.ALGORITHM])
         return decoded_token["sub"]
     except jwt.JWTError:
-        return None
+        return jwt.JWTError
