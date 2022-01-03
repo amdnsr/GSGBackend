@@ -1,8 +1,10 @@
 from mongoengine import Document
 from mongoengine import StringField
+from mongoengine.fields import BooleanField
 from app.config.configurations import DBConfig
 
 db_config = DBConfig()
+
 
 class UserDetailsModel(Document):
     first_name = StringField(required=True)
@@ -10,6 +12,7 @@ class UserDetailsModel(Document):
     email = StringField(required=True)
     phone_number = StringField(required=True)
     hashed_password = StringField(required=True)
+    is_email_verified = BooleanField(default=False)
 
     meta = {
         'db_alias': db_config.UserDetailsModel["alias"],
@@ -27,5 +30,3 @@ user_details_connection_info = {
     "username": db_config.MONGO_USERNAME,
     "password": db_config.MONGO_PASSWORD
 }
-
-

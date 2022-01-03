@@ -26,6 +26,17 @@ class UserDetailsInsertionHandler(MongoHandlerBase):
         self.close_connection()
         return db_obj
 
+    def verify_account(self, email: str):
+        self.make_connection()
+        try:
+            UserDetailsModel.objects(email=email).first().update(
+                set__is_email_verified=True)
+            self.close_connection()
+            return True
+        except:
+            self.close_connection()
+            return False
+
 
 user_details_insertion_handler = UserDetailsInsertionHandler(
     user_details_connection_info)
