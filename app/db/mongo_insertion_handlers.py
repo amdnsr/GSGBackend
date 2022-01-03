@@ -37,6 +37,16 @@ class UserDetailsInsertionHandler(MongoHandlerBase):
             self.close_connection()
             return False
 
+    def delete_account(self, email: str):
+        self.make_connection()
+        try:
+            UserDetailsModel.objects(email=email).first().delete()
+            self.close_connection()
+            return True
+        except:
+            self.close_connection()
+            return False
+
 
 user_details_insertion_handler = UserDetailsInsertionHandler(
     user_details_connection_info)
