@@ -7,6 +7,7 @@ from app.models.request_response_models import CreateAccountRequest, CreateAccou
 from app.core import security
 from app.utils.email_utils import generate_new_account_token, send_new_account_email, verify_new_account_token
 from app.db.mongo_insertion_handlers import user_details_insertion_handler
+from app.db.mongo_retrieval_handlers import user_details_retrieval_handler
 
 router = InferringRouter(tags=["users"])
 
@@ -14,25 +15,50 @@ router = InferringRouter(tags=["users"])
 @router.post("/register", response_model=Union[str, CreateAccountResponse])
 def register(user: CreateAccountRequest):
     email = user.email
+    print(email)
+    
+    # TODO
+    # currently, mongo atlas is very slow, so checking for existing user takes a lot of time. Maybe it is because we are making a connection to db everytime?
+    # instead maybe we should declare some global connections during the start of the program, and use their alias later?
+
+    # Commenting it out for testing purpose
+    # TODO remove the comments
+    # existing_user = user_details_retrieval_handler.get_user_details_by_email(
+    #     email)
+    # print("existing_user = ", existing_user)
+    # if existing_user:
+    #     return "Sorry, an account already exists with this email!"
     first_name = user.first_name
     db_obj = user_details_insertion_handler.insert(user)
+    print("inserted into db")
     token = generate_new_account_token(email)
     send_new_account_email(email, first_name, token)
-    return f"Check your mail for confirmation of account. Your temporary id is {db_obj.id}"
+    return f"Check your mail for confirmation of account. Your user id is {db_obj.id}"
 
 
 @router.get("/confirm-account-creation")
 def confirm_account(token: str):
     # print(token)
-    if verify_new_account_token(token):
-        return "Congratulations, you successfully activated your account!"
+    email = verify_new_account_token(token)
+    if email:
+        if user_details_insertion_handler.verify_account(email):
+            return "Congratulations, you successfully activated your account!"
+        else:
+            status.HTTP_304_NOT_MODIFIED
     else:
         return status.HTTP_401_UNAUTHORIZED
 
 
-@router.post("/login", response_model=LoginResponse)
-def login(login_details: LoginRequest):
-    print(login_details)
+@router.post("/login", response_model=Union[LoginResponse, str])
+def login(login_request: LoginRequest):
+    email = login_request.email
+    password = login_request.password
+    hashed_password = user_details_retrieval_handler.get_hashed_password(email)
+    if not hashed_password:
+        return "Sorry, wrong username/password!"
+    if not security.verify_password(password, hashed_password):
+        return "Sorry, wrong username/password!"
+
     # hash the password and then check this in the users database
 
     # user = [object of a User class] # it has user_id, email and hashed_password (can also directly be the model in the db)
@@ -43,10 +69,9 @@ def login(login_details: LoginRequest):
     #     raise HTTPException(status_code=400, detail="Incorrect email or password")
 
     # access_token, expire_at = security.create_access_token(user.user_id)
-    access_token, expire_at = security.create_access_token("ABC123")
-    print(access_token, expire_at)
+    access_token, expire_at = security.create_access_token(email)
     # refresh_token, refresh_expire_at = security.create_refresh_token(user.user_id)
-    refresh_token, refresh_expire_at = security.create_refresh_token("ABC123")
+    refresh_token, refresh_expire_at = security.create_refresh_token(email)
 
     return {
         "token_type": "bearer",
@@ -58,5 +83,6 @@ def login(login_details: LoginRequest):
 
 
 @router.get("/profile/me", response_model=UserProfileResponse)
-def get_profile(user_id: str = Depends(security.auth_wrapper)):
-    print(user_id)
+def get_profile(email: str = Depends(security.auth_wrapper)):
+    user = user_details_retrieval_handler.get_user_details_by_email(email)
+    return user
