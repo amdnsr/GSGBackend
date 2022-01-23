@@ -240,6 +240,7 @@ class MongoService:
     def add_new_user(cls, request: CreateAccountRequest):
         newUser = UserDetailsModel()
 
+        # assuming the password and confirm_password match
         newUser.first_name = request.first_name
         newUser.last_name = request.last_name
         newUser.email = request.email
@@ -289,17 +290,35 @@ class MongoService:
             return True
         return False
 
-    """ Change Password request 
-    @param ForgotPasswordRequest
+    """ Reset Password request 
+    @param email, new_password
     @return Boolean Success Status
     """
 
     @classmethod
-    def update_user_password(cls, request: ForgotPasswordRequest):
-        myUser: UserDetailsModel = UserDetailsModel.objects(email=request.email).first()
+    def reset_user_password(cls, email, new_password):
+        # assuming the new_password and confirm_new_password match
+        myUser: UserDetailsModel = UserDetailsModel.objects(email=email).first()
         if myUser is None:
             return False
-        new_hashed_password = get_password_hash(request.new_password)
+        new_hashed_password = get_password_hash(new_password)
+        myUser.update(set__hashed_password=new_hashed_password)
+        return True
+
+    """ Update Password request 
+    @param email, old_password, new_password
+    @return Boolean Success Status
+    """
+
+    @classmethod
+    def update_user_password(cls, email, old_password, new_password):
+        # assuming the new_password and confirm_new_password match
+        myUser: UserDetailsModel = UserDetailsModel.objects(email=email).first()
+        if myUser is None:
+            return False
+        if not verify_password(old_password, myUser.hashed_password):
+            return False
+        new_hashed_password = get_password_hash(new_password)
         myUser.update(set__hashed_password=new_hashed_password)
         return True
 
