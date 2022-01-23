@@ -5,6 +5,7 @@ import uvicorn
 from app.api.api_v1.endpoints import common_endpoints, users_endpoints
 from app.config.configurations import AppConfig, DBConfig
 from app.settings.app_settings import EmailSettings, Settings
+from app.service.mongo_service import MongoService
 
 # FastAPI JWT Auth CSRF Token
 # https://indominusbyte.github.io/fastapi-jwt-auth/configuration/csrf/
@@ -43,6 +44,7 @@ app.add_middleware(CORSMiddleware, allow_origins=origins,
 app.include_router(users_endpoints.router, prefix="")
 app.include_router(common_endpoints.router, prefix="")
 
+MongoService.make_connection(DBConfig.MAIN_CONNECTION_INFO)
 
 if __name__ == "__main__":
     # print(email_settings_text)
