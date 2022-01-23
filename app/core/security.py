@@ -66,3 +66,14 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
+
+
+def is_refresh_token(token):
+    try:
+        payload = jwt.decode(token, Settings.SECRET_KEY,
+                             algorithms=Settings.ALGORITHM)
+        return payload['refresh']
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token has expired")
+    except jwt.JWTError:
+        raise HTTPException(status_code=401, detail='Invalid token')
