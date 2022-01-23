@@ -52,6 +52,7 @@ class DBConfig(Config_Settings_Base, metaclass=SingleInstanceMetaClass):
         DBConfig.MAIN_CONNECTION_INFO = {
         "alias": DBConfig.MAIN_ALIAS,
         "db_name": DBConfig.MAIN_DB_NAME,
+        "mongo_env": DBConfig.MONGO_ENV,
         "host_name": DBConfig.MONGO_HOST,
         "host_port": DBConfig.MONGO_PORT,
         "username": DBConfig.MONGO_USERNAME,
