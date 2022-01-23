@@ -14,16 +14,16 @@ class MongoService:
         """To create connection to mongodb"""
         if mongo_connection_info.get('mongo_env') in ["STAGE", "PRODUCTION"]:
             connect(
-                alias=mongo_connection_info.get('alias'),
+                alias=mongo_connection_info.get('alias', 'default'),
                 db=mongo_connection_info.get('db_name'),
                 host=mongo_connection_info.get('host_name'),
                 port=mongo_connection_info.get('host_port'),
                 username=mongo_connection_info.get('username'),
-                password=mongo_connection_info.get('username'),
+                password=mongo_connection_info.get('password'),
             )
         else:
             connect(
-                alias=mongo_connection_info.get('alias'),
+                alias=mongo_connection_info.get('alias', 'default'),
                 db=mongo_connection_info.get('db_name'),
                 host=mongo_connection_info.get('host_name'),
                 port=mongo_connection_info.get('host_port')
