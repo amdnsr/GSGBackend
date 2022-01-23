@@ -249,6 +249,19 @@ class MongoService:
 
         return newUser.save()
 
+    """ Check if a user exists with this email 
+    @param string email
+    @return Boolean/User
+    """
+
+    @classmethod
+    def get_user_details_by_email(cls, email: str):
+        user = UserDetailsModel.objects(email=email).first()
+        if not user:
+            return False
+        user = UserProfileResponse.parse_obj(user.to_mongo().to_dict())
+        return user
+
     """ Verify User Email After SignUp 
     @param string email
     @return Boolean
@@ -259,8 +272,7 @@ class MongoService:
         myUser: UserDetailsModel = UserDetailsModel.objects(email=email).first()
         if myUser is None:
             return False
-        myUser.is_email_verified = True
-        myUser.save()
+        myUser.update(set__is_email_verified=True)
         return True
 
     """ User Login Validation Request -> User Credentials Are Correct or not
