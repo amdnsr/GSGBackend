@@ -24,6 +24,9 @@ class DBConfig(Config_Settings_Base, metaclass=SingleInstanceMetaClass):
     MONGO_ENV: Literal["DEV", "PYTEST", "STAGE", "PRODUCTION"] = None
     MONGO_USERNAME: str = None
     MONGO_PASSWORD: str = None
+    MAIN_ALIAS: str = None
+    MAIN_DB_NAME: str = None
+    MAIN_CONNECTION_INFO: dict = None
 
     def load(self, config_path='config.json'):
         config_json_path = os.path.join(DBConfig.current_dir, config_path)
@@ -44,6 +47,17 @@ class DBConfig(Config_Settings_Base, metaclass=SingleInstanceMetaClass):
         DBConfig.MONGO_ENV = get_env_variable("MONGO_ENV", config_json["mongo_details"], str)
         DBConfig.MONGO_USERNAME = get_env_variable("MONGO_USERNAME", config_json["mongo_details"], str)
         DBConfig.MONGO_PASSWORD = get_env_variable("MONGO_PASSWORD", config_json["mongo_details"], str)
+        DBConfig.MAIN_ALIAS = get_env_variable("MAIN_ALIAS", config_json["mongo_details"], str)
+        DBConfig.MAIN_DB_NAME = get_env_variable("MAIN_DB_NAME", config_json["mongo_details"], str)
+        DBConfig.MAIN_CONNECTION_INFO = {
+        "alias": DBConfig.MAIN_ALIAS,
+        "db_name": DBConfig.MAIN_DB_NAME,
+        "host_name": DBConfig.MONGO_HOST,
+        "host_port": DBConfig.MONGO_PORT,
+        "username": DBConfig.MONGO_USERNAME,
+        "password": DBConfig.MONGO_PASSWORD
+    }
+
 
 
 class AppConfig(Config_Settings_Base, metaclass=SingleInstanceMetaClass):
