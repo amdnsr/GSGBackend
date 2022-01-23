@@ -6,7 +6,7 @@ from mongoengine.connection import connect, disconnect
 from app.core.security import get_password_hash
 from app.models.request_response_models import *
 from app.service.schema_models_zia import *
-
+from app.core.security import verify_password
 
 class MongoService:
     @classmethod
@@ -285,7 +285,7 @@ class MongoService:
         myUser: UserDetailsModel = UserDetailsModel.objects(email=request.email).first()
         if myUser is None:
             return False
-        if myUser.hashed_password == get_password_hash(request.password):
+        if verify_password(request.password, myUser.hashed_password):
             return True
         return False
 
@@ -299,8 +299,8 @@ class MongoService:
         myUser: UserDetailsModel = UserDetailsModel.objects(email=request.email).first()
         if myUser is None:
             return False
-        myUser.hashed_password = get_password_hash(request.new_password)
-        myUser.save()
+        new_hashed_password = get_password_hash(request.new_password)
+        myUser.update(set__hashed_password=new_hashed_password)
         return True
 
     """ Delete User by Email Address
