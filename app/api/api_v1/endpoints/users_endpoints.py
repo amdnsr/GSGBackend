@@ -167,7 +167,11 @@ def reset_password(request: Request, token: str = Form(...), new_password: str =
 
 @router.get("/update-password")
 def get_update_password(token: str):
-    return templates.TemplateResponse("update_password.html", {"token": token, "request": dict(), "session": FlaskJinjaSession()})
+    try:
+        email = security.decode_token(token)
+        return templates.TemplateResponse("update_password.html", {"token": token, "request": dict(), "session": FlaskJinjaSession()})
+    except:
+        return "Sorry, invalid token!"
 
 
 @router.post("/update-password")
