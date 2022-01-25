@@ -67,3 +67,8 @@ def prompt(prompt):
     sys.stdout.write(prompt + ": ")
     sys.stdout.flush()
     return sys.stdin.readline().strip()
+
+
+class FlaskJinjaSession():
+    def __init__(self, user_id=None):
+        self.user_id = user_id

@@ -54,6 +54,8 @@
         "MONGO_URI": null,
         "MONGO_ENV": null,
         "MONGO_USERNAME": null,
-        "MONGO_PASSWORD": null
+        "MONGO_PASSWORD": null,
+        "MAIN_ALIAS": "default",
+        "MAIN_DB_NAME": "get_seat_go_db"
     }
 }

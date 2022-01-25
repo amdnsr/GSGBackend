@@ -17,6 +17,7 @@ from jose import jwt
 from app.config.configurations import AppConfig
 from app.settings.app_settings import EmailSettings, Settings
 from app.utils.helpers import prompt
+from app.exceptions.exceptions import ExpiredSignatureError_Exception, InvalidJWTToken_Exception
 # from app.core.config import settings
 
 # https://www.dev2qa.com/python-send-plain-text-html-content-attached-files-embedded-images-email-example/
@@ -186,8 +187,10 @@ def verify_new_account_token(token: str) -> Optional[str]:
         decoded_token = jwt.decode(
             token, Settings.SECRET_KEY, algorithms=[Settings.ALGORITHM])
         return decoded_token["sub"]
+    except jwt.ExpiredSignatureError:
+        raise ExpiredSignatureError_Exception
     except jwt.JWTError:
-        return jwt.JWTError
+        raise InvalidJWTToken_Exception
 
 
 def generate_password_reset_token(email: str) -> str:
@@ -206,5 +209,7 @@ def verify_password_reset_token(token: str) -> Optional[str]:
         decoded_token = jwt.decode(
             token, Settings.SECRET_KEY, algorithms=[Settings.ALGORITHM])
         return decoded_token["sub"]
+    except jwt.ExpiredSignatureError:
+        raise ExpiredSignatureError_Exception
     except jwt.JWTError:
-        return jwt.JWTError
+        raise InvalidJWTToken_Exception
