@@ -1,6 +1,12 @@
 *.pyc
 .vscode/
+.env
 app/extras/
 scripts/
-static/
-templates/
+templates-old/
+tests/
+TODO.md
+run_test.py
+run.sh
+task_scheduler.bat
+app/events
